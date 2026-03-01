@@ -1,0 +1,946 @@
+<!-- templates/student.html -->
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section A - Student Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #00f0ff;
+            --secondary: #ff00a0;
+            --tertiary: #7000ff;
+            --success: #00ff88;
+            --warning: #ffb800;
+            --danger: #ff3860;
+            --dark: #0a0a0f;
+            --darker: #050508;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --text-muted: rgba(255, 255, 255, 0.5);
+            --shadow: rgba(0, 0, 0, 0.5);
+        }
+
+        [data-theme="light"] {
+            --darker: #f0f4f8;
+            --dark: #ffffff;
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --border: rgba(0, 0, 0, 0.1);
+            --text-primary: #1a202c;
+            --text-secondary: #4a5568;
+            --text-muted: #718096;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--darker);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .cyber-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 240, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 240, 255, 0.02) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.3;
+            animation: float 25s infinite ease-in-out;
+            z-index: 0;
+        }
+
+        .orb-1 {
+            width: 500px;
+            height: 500px;
+            background: var(--primary);
+            top: -200px;
+            right: -100px;
+        }
+
+        .orb-2 {
+            width: 400px;
+            height: 400px;
+            background: var(--secondary);
+            bottom: -150px;
+            left: -100px;
+            animation-delay: -8s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid var(--border);
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .brand {
+            text-align: center;
+            padding-bottom: 30px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 30px;
+        }
+
+        .brand-logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+        }
+
+        .brand-tagline {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        .student-badge {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 4px 12px;
+            background: rgba(0, 240, 255, 0.2);
+            border: 1px solid var(--primary);
+            border-radius: 20px;
+            font-size: 0.7rem;
+            color: var(--primary);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .nav-menu {
+            list-style: none;
+            flex: 1;
+        }
+
+        .nav-item {
+            margin-bottom: 8px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 18px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: rgba(0, 240, 255, 0.1);
+            border-color: rgba(0, 240, 255, 0.3);
+            color: var(--primary);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.1);
+        }
+
+        .nav-link i {
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        .badge {
+            margin-left: auto;
+            background: var(--secondary);
+            color: #fff;
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-weight: 700;
+        }
+
+        .user-profile {
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--tertiary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--darker);
+        }
+
+        .user-info h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 2px;
+            color: var(--text-primary);
+        }
+
+        .user-info p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 30px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .title-with-theme {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .page-title h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--text-primary), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .page-title p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        /* Theme Toggle Button in Header */
+        .theme-toggle-header {
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            background: var(--card-bg);
+            border: 1.5px solid var(--border);
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.2rem;
+        }
+
+        .theme-toggle-header:hover {
+            transform: scale(1.08);
+            border-color: var(--secondary);
+            color: var(--secondary);
+            box-shadow: 0 0 20px rgba(255, 0, 160, 0.2);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .btn-icon:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+        }
+
+        .notification-dot {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 8px;
+            height: 8px;
+            background: var(--secondary);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 25px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(0, 240, 255, 0.3);
+            box-shadow: 0 20px 40px var(--shadow);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-primary);
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .icon-announcement { background: rgba(255, 0, 160, 0.1); color: var(--secondary); }
+        .icon-resources { background: rgba(112, 0, 255, 0.1); color: var(--tertiary); }
+        .icon-subjects { background: rgba(0, 255, 136, 0.1); color: var(--success); }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--border);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .announcement-item {
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border-left: 3px solid var(--secondary);
+            position: relative;
+            transition: all 0.3s;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .announcement-item:hover {
+            background: rgba(255, 0, 160, 0.05);
+            transform: translateX(5px);
+        }
+
+        .announcement-item.urgent {
+            border-left-color: var(--danger);
+            background: rgba(255, 56, 96, 0.05);
+            animation: urgentPulse 2s infinite;
+        }
+
+        @keyframes urgentPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(255, 56, 96, 0.2); }
+            50% { box-shadow: 0 0 20px 0 rgba(255, 56, 96, 0.1); }
+        }
+
+        .announcement-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 10px;
+        }
+
+        .announcement-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-primary);
+        }
+
+        .announcement-text {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .announcement-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .tag {
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .tag-urgent { background: rgba(255, 56, 96, 0.2); color: var(--danger); }
+        .tag-new { background: rgba(0, 255, 136, 0.2); color: var(--success); }
+        .tag-normal { background: rgba(0, 240, 255, 0.2); color: var(--primary); }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .stat-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .section-content {
+            display: none;
+        }
+
+        .section-content.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+
+        .view-all-link {
+            cursor: pointer;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .view-all-link:hover {
+            gap: 8px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); }
+            .main-content { margin-left: 0; }
+            .dashboard-grid { grid-template-columns: 1fr; }
+            .title-with-theme { flex-direction: column; gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="cyber-grid"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <div class="container">
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-logo">SECTION A</div>
+                <div class="brand-tagline">Student Portal</div>
+                <span class="student-badge">Student</span>
+            </div>
+
+            <nav>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a class="nav-link active" onclick="showSection('dashboard')">
+                            <i class="fas fa-th-large"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" onclick="showSection('announcements')">
+                            <i class="fas fa-bullhorn"></i>
+                            <span>Announcements</span>
+                            <span class="badge" id="annBadge">0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" onclick="showSection('resources')">
+                            <i class="fas fa-folder-open"></i>
+                            <span>Resources</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" onclick="showSection('subjects')">
+                            <i class="fas fa-book"></i>
+                            <span>My Subjects</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" onclick="showSection('leave')">
+                            <i class="fas fa-calendar-check"></i>
+                            <span>Apply Leave</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="user-profile">
+                <div class="user-avatar">ST</div>
+                <div class="user-info">
+                    <h4>Student</h4>
+                    <p>student@sectiona.edu</p>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <!-- Dashboard Section -->
+            <div id="dashboard" class="section-content active">
+                <div class="header">
+                    <div class="title-with-theme">
+                        <div class="page-title">
+                            <h1>Dashboard</h1>
+                            <p>Welcome back! Here's what's happening today.</p>
+                        </div>
+                        <button class="theme-toggle-header" onclick="toggleTheme()" title="Toggle Theme">
+                            <i class="fas fa-sun" id="themeIcon"></i>
+                        </button>
+                    </div>
+                    <div class="header-actions">
+                        <button class="btn-icon">
+                            <i class="fas fa-bell"></i>
+                            <span class="notification-dot"></span>
+                        </button>
+                        <button class="btn-icon" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <!-- FIXED: Latest Announcements Panel -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <div class="card-icon icon-announcement">
+                                    <i class="fas fa-bullhorn"></i>
+                                </div>
+                                Latest Announcements
+                            </div>
+                            <span class="view-all-link" onclick="showSection('announcements')">
+                                View All <i class="fas fa-arrow-right"></i>
+                            </span>
+                        </div>
+                        <div id="recentAnnouncements">
+                            <div class="loading"></div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Stats -->
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <div class="card-icon icon-resources">
+                                    <i class="fas fa-chart-pie"></i>
+                                </div>
+                                Quick Stats
+                            </div>
+                        </div>
+                        <div class="stat-grid">
+                            <div class="stat-item">
+                                <div class="stat-value">85%</div>
+                                <div class="stat-label">Attendance</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">12</div>
+                                <div class="stat-label">Assignments</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">3</div>
+                                <div class="stat-label">Pending</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">A+</div>
+                                <div class="stat-label">Grade</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Announcements Section -->
+            <div id="announcements" class="section-content">
+                <div class="header">
+                    <div class="page-title">
+                        <h1>Announcements</h1>
+                        <p>Stay updated with latest class notifications.</p>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid" style="grid-template-columns: 1fr;">
+                    <div class="card">
+                        <div id="allAnnouncements">
+                            <div class="loading"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Other Sections -->
+            <div id="resources" class="section-content">
+                <div class="header">
+                    <div class="page-title"><h1>Study Resources</h1></div>
+                </div>
+                <div class="card">
+                    <div class="empty-state">
+                        <i class="fas fa-folder-open"></i>
+                        <h3>Resources</h3>
+                        <p>Your study materials will appear here</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="subjects" class="section-content">
+                <div class="header">
+                    <div class="page-title"><h1>My Subjects</h1></div>
+                </div>
+                <div class="card">
+                    <div class="empty-state">
+                        <i class="fas fa-book"></i>
+                        <h3>Subjects</h3>
+                        <p>Your subject list will appear here</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="leave" class="section-content">
+                <div class="header">
+                    <div class="page-title"><h1>Apply for Leave</h1></div>
+                </div>
+                <div class="card">
+                    <div class="empty-state">
+                        <i class="fas fa-calendar-check"></i>
+                        <h3>Leave Application</h3>
+                        <p>Leave form will appear here</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let announcements = [];
+
+        // Theme Toggle Function
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('themeIcon');
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            html.setAttribute('data-theme', newTheme);
+            icon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+            
+            // Save to localStorage
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // Load saved theme
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            document.getElementById('themeIcon').className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+
+        // Load theme on page load
+        loadTheme();
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadAnnouncements();
+        });
+
+        async function loadAnnouncements() {
+            try {
+                const response = await fetch('/api/announcements');
+                const result = await response.json();
+                
+                if (result.success) {
+                    announcements = result.data;
+                    renderAnnouncements();
+                    updateBadge();
+                } else {
+                    showEmpty('recentAnnouncements', 'Failed to load');
+                    showEmpty('allAnnouncements', 'Failed to load');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showEmpty('recentAnnouncements', 'Error loading');
+                showEmpty('allAnnouncements', 'Error loading');
+            }
+        }
+
+        // FIXED: Properly render announcements for both panels
+        function renderAnnouncements() {
+            const recentContainer = document.getElementById('recentAnnouncements');
+            const allContainer = document.getElementById('allAnnouncements');
+
+            if (announcements.length === 0) {
+                const emptyHtml = `
+                    <div class="empty-state">
+                        <i class="fas fa-bullhorn"></i>
+                        <h3>No announcements yet</h3>
+                        <p>Check back later for updates</p>
+                    </div>
+                `;
+                recentContainer.innerHTML = emptyHtml;
+                allContainer.innerHTML = emptyHtml;
+                return;
+            }
+
+            // FIXED: Create separate HTML for each container
+            // Recent announcements (first 2)
+            const recentHtml = announcements.slice(0, 2).map(ann => `
+                <div class="announcement-item ${ann.priority}">
+                    <div class="announcement-header">
+                        <div class="announcement-title">
+                            ${escapeHtml(ann.title)}
+                            ${isNew(ann.created_at) ? '<span class="tag tag-new">New</span>' : ''}
+                        </div>
+                    </div>
+                    <div class="announcement-text">${escapeHtml(ann.content)}</div>
+                    <div class="announcement-meta">
+                        <span>
+                            <i class="fas fa-user"></i> ${ann.author_name || 'Admin'} 
+                            <i class="fas fa-clock" style="margin-left: 10px;"></i> ${formatDate(ann.created_at)}
+                        </span>
+                        <span class="tag tag-${ann.priority}">${ann.priority}</span>
+                    </div>
+                </div>
+            `).join('');
+
+            // All announcements
+            const allHtml = announcements.map(ann => `
+                <div class="announcement-item ${ann.priority}">
+                    <div class="announcement-header">
+                        <div class="announcement-title">
+                            ${escapeHtml(ann.title)}
+                            ${isNew(ann.created_at) ? '<span class="tag tag-new">New</span>' : ''}
+                        </div>
+                    </div>
+                    <div class="announcement-text">${escapeHtml(ann.content)}</div>
+                    <div class="announcement-meta">
+                        <span>
+                            <i class="fas fa-user"></i> ${ann.author_name || 'Admin'} 
+                            <i class="fas fa-clock" style="margin-left: 10px;"></i> ${formatDate(ann.created_at)}
+                        </span>
+                        <span class="tag tag-${ann.priority}">${ann.priority}</span>
+                    </div>
+                </div>
+            `).join('');
+
+            // FIXED: Set HTML separately
+            recentContainer.innerHTML = recentHtml;
+            allContainer.innerHTML = allHtml;
+        }
+
+        function updateBadge() {
+            const unread = announcements.filter(a => isNew(a.created_at)).length;
+            document.getElementById('annBadge').textContent = unread > 0 ? unread : announcements.length;
+        }
+
+        function isNew(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diff = now - date;
+            return diff < 86400000; // Less than 24 hours
+        }
+
+        function showEmpty(elementId, message) {
+            document.getElementById(elementId).innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <h3>${message}</h3>
+                </div>
+            `;
+        }
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.section-content').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            
+            document.getElementById(sectionId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                window.location.href = '/logout';
+            }
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diff = now - date;
+            
+            if (diff < 60000) return 'Just now';
+            if (diff < 3600000) return Math.floor(diff/60000) + ' min ago';
+            if (diff < 86400000) return Math.floor(diff/3600000) + ' hours ago';
+            return Math.floor(diff/86400000) + ' days ago';
+        }
+
+        document.addEventListener('mousemove', (e) => {
+            document.querySelectorAll('.orb').forEach((orb, i) => {
+                const speed = (i + 1) * 30;
+                const x = (window.innerWidth / 2 - e.clientX) / speed;
+                const y = (window.innerHeight / 2 - e.clientY) / speed;
+                orb.style.transform = `translate(${x}px, ${y}px)`;
+            });
+        });
+    </script>
+</body>
+</html>
